@@ -139,8 +139,11 @@ server <- function(input, output, session) {
     xu <- sum(D$M==levels[2]) * input$beta
     x <- ifelse(input$betaDist == "delta", xu, rpois(1, xu))
     updateNumericInput(session, "attemptsN", value = x)
+    updateActionButton(session, "attemptsNSet", label = "Set pathogen load👍")
   })
   observeEvent(input$transmitSet, {
+    updateActionButton(session, "transmitSet", label = "Transmission attempts👍")
+    updateActionButton(session, "attemptsNSet", label = "Set pathogen load")
     if (input$attemptsN==0) return
     ic <- sample(1:(n^2), input$attemptsN, replace=T)
     ix <- (ic-1) %/% n
@@ -151,6 +154,7 @@ server <- function(input, output, session) {
     D$M[D$M==levels[2]] <- levels[3]
   })
   observeEvent(input$infectSet, {
+    updateActionButton(session, "transmitSet", label = "Transmission attempts")
     D$M[D$X & (D$M==levels[1])] <- levels[2]
     D$X[] <- F
     D$time <- D$time + 1
